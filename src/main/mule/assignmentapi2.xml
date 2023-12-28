@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="6f43adef-c22c-447b-98a3-131039febc29" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="assignmentapi2Flow" doc:id="95032826-444b-4729-94e0-d40d7ecea09d" >
+		<http:listener doc:name="Listener" doc:id="fa70f024-8e5a-43b3-aca2-3c557f10b0d4" config-ref="HTTP_Listener_config" path="/assignment2"/>
+		<logger level="INFO" doc:name="Logger" doc:id="caae8deb-162a-4139-8fdb-e777b2c9b82c" message='#["main flow starts"]'/>
+		<set-variable value='#["brand"]' doc:name="Set Variable" doc:id="8ebafffd-5009-4f32-8ed0-69c073e0b25b" variableName="empname"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0111f3c2-718d-45c0-a445-caf8db432464" message="#[vars.empname]"/>
+		<ee:transform doc:name="Transform Message" doc:id="15dccab7-d90a-4b46-8375-956eb318331c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"empName":"brand"]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="emp" ><![CDATA["ravi"]]></ee:set-variable>
+				<ee:set-variable variableName="brandName" ><![CDATA[%dw 2.0
+output application/json
+---
+"empname":vars.empname]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="45348be4-a8de-44f6-9a20-7c6a80b01371" message="#[vars.emp]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f0be285e-bdaa-40ce-90e6-0cec14314b0b" message="#[vars.brandName]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="43e753bb-3776-40d0-be19-7d2d116e17e7" message='#["main ends"]'/>
+	</flow>
+</mule>
